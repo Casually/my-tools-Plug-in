@@ -1,0 +1,29 @@
+{
+	"maninfest_version":2,
+	"name":"my tools",
+	"version":"1.0.0",
+	"description":"一些个人使用的工具集",
+	"brower_action":{
+		"default_icon":"",
+		"default_title":"",
+		"default_popup":"html/popup.html"
+	},
+	"permissions":[
+		"http://*/",
+		"https://*/",
+		"bookmarks",
+		"tabs",
+		"history"
+	],
+	"background":{
+		"page":"html/background.html"
+	},
+	"content_script":[{
+		"matches":["http://*/*","https://*/*"],
+		"js":["",""],
+		"css":["css/"],
+		"run_at":"document_end",
+		"all_frames":true
+	}]
+
+}
