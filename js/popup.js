@@ -28,11 +28,22 @@ function combinationMenu(type,menu) {
     for(var i = 0;i<type.length;i++){
         c_obj = {
             "otag":"div",
-            "oclass":"menu-node"
+            "oclass":"menu-node",
+            "ohtml":type[i].name
         }
         if(type[i].level = 0){
             ele = createNode(c_obj);
             b.appendChild(ele);
+            for(var j = 0;j<type.length;j++){
+                if(type[j].paterId = type[i].id){
+                    c_obj = {
+                        "otag":"div",
+                        "oclass":"menu-node",
+                        "ohtml":type[j].name
+                    }
+                    ele.appendChild(createNode(c_obj));
+                }
+            }
         }
     }
 }
@@ -55,6 +66,9 @@ function createNode(obj) {
     }
     if(!is_null(obj.oname)){
         node_div.name = obj.oid;
+    }
+    if(!is_null(obj.ohtml)){
+        node_div.innerHTML = obj.ohtml;
     }
     return node_div;
 }
