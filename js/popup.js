@@ -1,13 +1,13 @@
 var pater_nodes = document.getElementById("menu-all-nodes");
 
 $.post(
-    "../data/menu-type.json",
+    "http://yzt.casually.cc/menu-type.json",
     {},
-    function(data){
-        var d
-        try{
+    function (data) {
+        var d;
+        try {
             d = JSON.parse(data)
-        }catch(e){
+        } catch (e) {
             console.log(e);
             d = data;
         }
@@ -75,7 +75,7 @@ function combinationMenu(type, menu, level, eles) {
                 c_obj = {
                     "otag": "div",
                     "oclass": "menu-url",
-                    "ohtml": "<span>" + menu[j].name + "</span>",
+                    "ohtml": "<span data_url='"+ menu[j].url +"'>" + menu[j].name + "</span>",
                     "oid": menu[j].id
                 }
                 eles[n].appendChild(createNode(c_obj));
@@ -113,6 +113,11 @@ function createNode(obj) {
     if (!is_null(obj.ohtml)) {
         node_div.innerHTML = obj.ohtml;
     }
+    if (!is_null(obj.oattr)) {
+        for (var i = 0; i < obj.oattr.length; i++) {
+            node_div.setAttribute(obj.oattr[i].name, obj.oattr[i].type);
+        }
+    }
     return node_div;
 }
 
@@ -132,12 +137,14 @@ function is_null(obj) {
 /**
  * 点击监听，菜单的折叠
  */
-document.addEventListener("click",function(ev){
+document.addEventListener("click", function (ev) {
     var el = ev.toElement;
-    if(el.tagName === "SPAN" && (el.className.indexOf("span-title") != -1)){
+    if (el.tagName === "SPAN" && (el.className.indexOf("span-title") != -1)) {
         el = ev.toElement.parentNode;
         switch_div(el);
-    }else{
+    } else if (el.tagName === "SPAN" && (el.parentNode.className.indexOf("menu-url") != -1)) {
+        open_url(manege_url(el.getAttribute("data_url")));
+    } else {
         return;
     }
 })
@@ -146,12 +153,37 @@ document.addEventListener("click",function(ev){
  * 菜单折叠
  * @param el
  */
-function switch_div(el){
-    if(is_null(el.getAttribute("data_h"))){
-        el.setAttribute("data_h",el.scrollHeight);
+function switch_div(el) {
+    if (is_null(el.getAttribute("data_h"))) {
+        el.setAttribute("data_h", el.scrollHeight);
         el.style.height = "24px";
-    }else{
+    } else {
         el.style.height = el.getAttribute("data_h") + "px";
-        el.setAttribute("data_h","");
+        el.setAttribute("data_h", "");
     }
+}
+
+/**
+ * 打开连接
+ * @param url
+ */
+function open_url(url) {
+    chrome.tabs.create({
+        "url":url
+        })/*
+        chrome.windows.create({
+            "url": url
+        })*/
+}
+
+/**
+ * 处理连接
+ * @param url
+ * @returns {*}
+ */
+function manege_url(url){
+    if(url.substring(0,4) != "http"){
+        return "http://" + url;
+    }
+    return url;
 }
