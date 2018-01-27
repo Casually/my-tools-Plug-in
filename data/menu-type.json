@@ -1,0 +1,72 @@
+{
+  "menuType": [
+    {
+      "name": "工具",
+      "id": "0",
+      "paterId": "0",
+      "level": 0
+    },
+    {
+      "name": "娱乐",
+      "id": "1",
+      "paterId": "0",
+      "level": 0
+    },
+    {
+      "name": "影视",
+      "id": "3",
+      "paterId": "1",
+      "level": 1
+    },
+    {
+      "name": "音乐",
+      "id": "4",
+      "paterId": "1",
+      "level": 1
+    },
+    {
+      "name": "常用",
+      "id": "5",
+      "paterId": "4",
+      "level": 2
+    },
+    {
+      "name": "随心随行",
+      "id": "6",
+      "paterId": "4",
+      "level": 2
+    },
+    {
+      "name": "临时",
+      "id": "2",
+      "paterId": "0",
+      "level": 0
+    }
+  ],
+  "menuUrl": [
+    {
+      "name": "站长工具",
+      "id": "1",
+      "url": "www.baidu.com",
+      "typeId": "0"
+    },
+    {
+      "name": "DJ音乐盒",
+      "id": "2",
+      "url": "www.dj520.com",
+      "typeId": "4"
+    },
+    {
+      "name": "id97",
+      "id": "3",
+      "url": "www.id97.com",
+      "typeId": "3"
+    },
+    {
+      "name": "百度随心听",
+      "id": "4",
+      "url": "suixinting.baidu.com",
+      "typeId": "6"
+    }
+  ]
+}

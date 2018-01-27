@@ -1,78 +1,20 @@
-var menu_all_type = [
-    {
-        "name": "工具",
-        "id": "0",
-        "paterId": "0",
-        "level": 0
-    },
-    {
-        "name": "娱乐",
-        "id": "1",
-        "paterId": "0",
-        "level": 0
-    },
-    {
-        "name": "影视",
-        "id": "3",
-        "paterId": "1",
-        "level": 1
-    },
-    {
-        "name": "音乐",
-        "id": "4",
-        "paterId": "1",
-        "level": 1
-    },
-    {
-        "name": "常用",
-        "id": "5",
-        "paterId": "4",
-        "level": 2
-    },
-    {
-        "name": "随心随行",
-        "id": "6",
-        "paterId": "4",
-        "level": 2
-    },
-    {
-        "name": "临时",
-        "id": "2",
-        "paterId": "0",
-        "level": 0
-    },
-]
-
-var menu_all_url = [
-    {
-        "name": "站长工具",
-        "id": "1",
-        "url": "www.baidu.com",
-        "typeId": "0"
-    },
-    {
-        "name": "DJ音乐盒",
-        "id": "2",
-        "url": "www.dj520.com",
-        "typeId": "4"
-    },
-    {
-        "name": "id97",
-        "id": "3",
-        "url": "www.id97.com",
-        "typeId": "3"
-    },
-    {
-        "name": "百度随心听",
-        "id": "4",
-        "url": "suixinting.baidu.com",
-        "typeId": "6"
-    },
-]
-
 var pater_nodes = document.getElementById("menu-all-nodes");
 
-combinationMenu(menu_all_type, menu_all_url);
+$.post(
+    "../data/menu-type.json",
+    {},
+    function(data){
+        var d
+        try{
+            d = JSON.parse(data)
+        }catch(e){
+            console.log(e);
+            d = data;
+        }
+        combinationMenu(d.menuType, d.menuUrl);
+    }
+)
+
 
 /**
  * 组合树形菜单
@@ -95,7 +37,7 @@ function combinationMenu(type, menu, level, eles) {
                 c_obj = {
                     "otag": "div",
                     "oclass": "menu-node",
-                    "ohtml": "<span>" + type[i].name + "</span>",
+                    "ohtml": "<span class='span-title'>" + type[i].name + "</span>",
                     "oid": type[i].id
                 }
                 eles_all[size] = createNode(c_obj);
@@ -113,7 +55,7 @@ function combinationMenu(type, menu, level, eles) {
                     c_obj = {
                         "otag": "div",
                         "oclass": "menu-node",
-                        "ohtml": "<span>" + type[j].name + "</span>",
+                        "ohtml": "<span class='span-title'>" + type[j].name + "</span>",
                         "oid": type[j].id
                     }
                     eles_all[size] = createNode(c_obj);
@@ -188,14 +130,28 @@ function is_null(obj) {
 }
 
 /**
- * 类型点击折叠与展开
+ * 点击监听，菜单的折叠
  */
-$(".menu-node").click(function (e) {
-    if (is_null($(this).attr("data_h"))) {
-        $(this).attr("data_h", $(this).css("height"));
-        $(this).css("height", "25px");
-    } else {
-        $(this).css("height", $(this).attr("data_h"));
-        $(this).attr("data_h", "");
+document.addEventListener("click",function(ev){
+    var el = ev.toElement;
+    if(el.tagName === "SPAN" && (el.className.indexOf("span-title") != -1)){
+        el = ev.toElement.parentNode;
+        switch_div(el);
+    }else{
+        return;
     }
 })
+
+/**
+ * 菜单折叠
+ * @param el
+ */
+function switch_div(el){
+    if(is_null(el.getAttribute("data_h"))){
+        el.setAttribute("data_h",el.scrollHeight);
+        el.style.height = "24px";
+    }else{
+        el.style.height = el.getAttribute("data_h") + "px";
+        el.setAttribute("data_h","");
+    }
+}
