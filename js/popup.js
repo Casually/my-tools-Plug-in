@@ -36,7 +36,7 @@ function combinationMenu(type, menu, level, eles) {
                 console.log(type[i].name);
                 c_obj = {
                     "otag": "div",
-                    "oclass": "menu-node",
+                    "oclass": "menu-node menu_close",
                     "ohtml": "<span class='span-title'>" + type[i].name + "</span>",
                     "oid": type[i].id
                 }
@@ -54,7 +54,7 @@ function combinationMenu(type, menu, level, eles) {
                     console.log(type[j].name);
                     c_obj = {
                         "otag": "div",
-                        "oclass": "menu-node",
+                        "oclass": "menu-node menu_close",
                         "ohtml": "<span class='span-title'>" + type[j].name + "</span>",
                         "oid": type[j].id
                     }
@@ -92,54 +92,14 @@ function combinationMenu(type, menu, level, eles) {
 }
 
 /**
- * 创建节点
- * @param obj
- * @returns {*}
- */
-function createNode(obj) {
-    if (is_null(obj.otag)) {
-        return null;
-    }
-    var node_div = document.createElement(obj.otag);
-    if (!is_null(obj.oclass)) {
-        node_div.className = obj.oclass;
-    }
-    if (!is_null(obj.oid)) {
-        node_div.id = obj.oid;
-    }
-    if (!is_null(obj.oname)) {
-        node_div.name = obj.oid;
-    }
-    if (!is_null(obj.ohtml)) {
-        node_div.innerHTML = obj.ohtml;
-    }
-    if (!is_null(obj.oattr)) {
-        for (var i = 0; i < obj.oattr.length; i++) {
-            node_div.setAttribute(obj.oattr[i].name, obj.oattr[i].type);
-        }
-    }
-    return node_div;
-}
-
-/**
- * 判断是否为空
- * @param obj
- * @returns {boolean}
- */
-function is_null(obj) {
-    if (obj === null || obj === "" || obj === undefined || obj === "undefined") {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-/**
- * 点击监听，菜单的折叠
+ * 点击监听，
+ * 菜单的折叠。
+ * 连接的打开
  */
 document.addEventListener("click", function (ev) {
     var el = ev.toElement;
     if (el.tagName === "SPAN" && (el.className.indexOf("span-title") != -1)) {
+        bgcolor(el);
         el = ev.toElement.parentNode;
         switch_div(el);
     } else if (el.tagName === "SPAN" && (el.parentNode.className.indexOf("menu-url") != -1)) {
@@ -154,13 +114,19 @@ document.addEventListener("click", function (ev) {
  * @param el
  */
 function switch_div(el) {
-    if (is_null(el.getAttribute("data_h"))) {
-        el.setAttribute("data_h", el.scrollHeight);
-        el.style.height = "24px";
-    } else {
-        el.style.height = el.getAttribute("data_h") + "px";
-        el.setAttribute("data_h", "");
+    toggleClass(el,"menu_close");
+}
+
+/**
+ * 选中高亮
+ * @param el
+ */
+function bgcolor(el){
+    var cla = getByClass(el.className.split(" ")[0]);
+    for(var i = 0;i < cla.length;i++){
+        cla[i].style.color = "";
     }
+    el.style.color = "red";
 }
 
 /**
@@ -170,8 +136,9 @@ function switch_div(el) {
 function open_url(url) {
     chrome.tabs.create({
         "url":url
-        })/*
-        chrome.windows.create({
+        })
+    /*
+    chrome.windows.create({
             "url": url
         })*/
 }

@@ -8,6 +8,9 @@ body{
     max-width: 200px;
     overflow: hidden;
     height: auto;
+    border-left: 1px solid #e6661f;
+    border-radius: 5px;
+    margin-top: 10px;
 }
 .menu-url{
     border: 1px solid black;
@@ -19,6 +22,11 @@ body{
     margin-left: 20px;
     overflow: hidden;
 }
+
+.menu_close{
+    height: 24px;
+}
+
 .span-title{
     cursor: pointer;
 }
