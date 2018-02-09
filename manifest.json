@@ -11,9 +11,9 @@
 	"permissions":[
 		"http://*/",
 		"https://*/",
-		"bookmarks",
-		"tabs",
-		"history"
+		"bookmarks",//书签权限
+		"tabs",//标签页权限
+		"history"//历史记录权限
 	],
 	"background":{
 		"page":"html/background.html"
@@ -21,7 +21,7 @@
 	"content_scripts":[{
 		"matches":["http://*/*","https://*/*"],
 		"js":["js/jquery-3.0.0.js","js/bootstrap.js"],
-		"css":["css/bootstrap.css"],
+/*		"css":["css/bootstrap.css"],*/
 		"run_at":"document_end",
 		"all_frames":true
 	}]

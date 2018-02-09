@@ -1,0 +1,40 @@
+{
+  "menuType": [
+    {
+      "name": "娱乐",
+      "id": 1,
+      "parentId": 0
+    },
+    {
+      "name": "影视",
+      "id": 3,
+      "paterId": 1
+    },
+    {
+      "name": "音乐",
+      "id": 4,
+      "paterId": 1
+    },
+    {
+      "name": "DJ音乐网",
+      "id": 7,
+      "paterId": 4,
+      "url":"www.dj520.com"
+    },
+    {
+      "name": "常用",
+      "id": 5,
+      "paterId": 4
+    },
+    {
+      "name": "随心随行",
+      "id": 6,
+      "paterId": 4
+    },
+    {
+      "name": "临时",
+      "id": 2,
+      "paterId": 0
+    }
+  ]
+}

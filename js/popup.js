@@ -1,23 +1,56 @@
 var pater_nodes = document.getElementById("menu-all-nodes");
-
+var bg = chrome.extension.getBackgroundPage();
+var NodeDatas = bg.NodeDatas;
+init_node_mune(NodeDatas);
 $.post(
-    "http://yzt.casually.cc/menu-type.json",
+    /*"http://yzt.casually.cc/menu-type.json",*/
+    "../data/test.json",
     {},
     function (data) {
-        var d;
-        try {
-            d = JSON.parse(data)
-        } catch (e) {
-            console.log(e);
-            d = data;
-        }
-        combinationMenu(d.menuType, d.menuUrl);
+        /* var d;
+         try {
+             /!*d = JSON.parse(data);*!/
+             d = JSON.parse(bg.NodeDatas);
+         } catch (e) {
+             console.log(e);
+             /!*d = data;*!/
+             d = bg.NodeDatas;
+         }
+         //combinationMenu(d.menuType, d.menuUrl);
+         console.table(bg.NodeDatas);
+         init_node_mune(d);*/
     }
 )
 
+var click_el;
+
+
+$("#add_url").click(function (e) {
+    var c_obj = {
+        "otag": "div",
+        "oclass": "menu-url",
+        "ohtml": "<span data_url='" + bg.tab_context.url + "'>" + bg.tab_context.title + "</span>",
+        "oid": 12
+    }
+
+    $.post(
+        "",
+        {
+            "webName": "",
+            "webDress": "",
+            "webInfo": "",
+            "webTypeId": "c6b87125428343d68cb461dbbe36cdd9",
+            "webAscriptionUserId": "2"
+        },
+        function (data) {
+
+        }
+    )
+    click_el.appendChild(createNode(c_obj));
+})
 
 /**
- * 组合树形菜单
+ * 组合树形菜单(废弃)
  * @param type 类型
  * @param menu 菜单
  * @param level 类型等级
@@ -33,7 +66,6 @@ function combinationMenu(type, menu, level, eles) {
         eles = new Array();
         for (var i = 0; i < type.length; i++) {
             if (type[i].level === level) {
-                console.log(type[i].name);
                 c_obj = {
                     "otag": "div",
                     "oclass": "menu-node menu_close",
@@ -51,7 +83,6 @@ function combinationMenu(type, menu, level, eles) {
             var is_next = false;
             for (var j = 0; j < type.length; j++) {
                 if (eles[i].id === type[j].paterId && type[j].level === level) {
-                    console.log(type[j].name);
                     c_obj = {
                         "otag": "div",
                         "oclass": "menu-node menu_close",
@@ -75,7 +106,7 @@ function combinationMenu(type, menu, level, eles) {
                 c_obj = {
                     "otag": "div",
                     "oclass": "menu-url",
-                    "ohtml": "<span data_url='"+ menu[j].url +"'>" + menu[j].name + "</span>",
+                    "ohtml": "<span data_url='" + menu[j].url + "'>" + menu[j].name + "</span>",
                     "oid": menu[j].id
                 }
                 eles[n].appendChild(createNode(c_obj));
@@ -91,6 +122,45 @@ function combinationMenu(type, menu, level, eles) {
     }
 }
 
+
+/**
+ * 遍历生成树形结构
+ * @param nodes
+ * @param pid
+ * @param ele
+ */
+function init_node_mune(nodes, pid, ele) {
+    if (is_null(ele)) {
+        ele = pater_nodes;
+    }
+    if (is_null(pid)) {
+        pid = 0;
+    }
+    for (var i = 0; i < nodes.length; i++) {
+        if (parseInt(nodes[i].parentId) === parseInt(pid)) {
+            var c_obj = {};
+            if (is_null(nodes[i].url)) {
+                c_obj = {
+                    "otag": "div",
+                    "oclass": "menu-node menu_close",
+                    "ohtml": "<span class='span-title'>" + nodes[i].name + "</span>",
+                    "oid": nodes[i].id
+                }
+            } else {
+                c_obj = {
+                    "otag": "div",
+                    "oclass": "menu-url",
+                    "ohtml": "<span data_url='" + nodes[i].url + "'>" + nodes[i].name + "</span>",
+                    "oid": nodes[i].id
+                }
+            }
+            var cele = createNode(c_obj)
+            ele.appendChild(cele);
+            init_node_mune(nodes, nodes[i].id, cele)
+        }
+    }
+}
+
 /**
  * 点击监听，
  * 菜单的折叠。
@@ -101,8 +171,11 @@ document.addEventListener("click", function (ev) {
     if (el.tagName === "SPAN" && (el.className.indexOf("span-title") != -1)) {
         bgcolor(el);
         el = ev.toElement.parentNode;
+        click_el = el;
         switch_div(el);
     } else if (el.tagName === "SPAN" && (el.parentNode.className.indexOf("menu-url") != -1)) {
+        open_url(manege_url(el.getAttribute("data_url")));
+    } else if (el.tagName === "SPAN" && (el.parentNode.tagName === "LI")) {
         open_url(manege_url(el.getAttribute("data_url")));
     } else {
         return;
@@ -114,16 +187,16 @@ document.addEventListener("click", function (ev) {
  * @param el
  */
 function switch_div(el) {
-    toggleClass(el,"menu_close");
+    toggleClass(el, "menu_close");
 }
 
 /**
  * 选中高亮
  * @param el
  */
-function bgcolor(el){
+function bgcolor(el) {
     var cla = getByClass(el.className.split(" ")[0]);
-    for(var i = 0;i < cla.length;i++){
+    for (var i = 0; i < cla.length; i++) {
         cla[i].style.color = "";
     }
     el.style.color = "red";
@@ -135,8 +208,8 @@ function bgcolor(el){
  */
 function open_url(url) {
     chrome.tabs.create({
-        "url":url
-        })
+        "url": url
+    })
     /*
     chrome.windows.create({
             "url": url
@@ -148,9 +221,47 @@ function open_url(url) {
  * @param url
  * @returns {*}
  */
-function manege_url(url){
-    if(url.substring(0,4) != "http"){
+function manege_url(url) {
+    if (url.substring(0, 4) != "http") {
         return "http://" + url;
     }
     return url;
+}
+
+var startTxt = "";
+var endTxt = "";
+document.addEventListener("keydown", function (ev) {
+    startTxt = getById("exampleInputAmount").value;
+});
+
+document.addEventListener("keyup", function (ev) {
+    endTxt = getById("exampleInputAmount").value;
+    if (is_null(endTxt)) {
+        $("#view-search").hide();
+        return;
+    } else {
+        $("#view-search").show();
+    }
+    if (endTxt != startTxt) {
+        $("#view-search").html(searchData(endTxt));
+    }
+})
+
+function searchData(e) {
+    var str = "<ul>"
+    for (var i = 0; i < NodeDatas.length; i++) {
+        if (is_null(NodeDatas[i].url)) {
+            continue;
+        }
+        if (NodeDatas[i].name.indexOf(e) != -1) {
+            c_obj = {
+                "otag": "div",
+                "oclass": "menu-url",
+                "ohtml": "<span data_url='" + NodeDatas[i].url + "'>" + NodeDatas[i].name + "</span>",
+            }
+            str += "<li>" + createNode(c_obj).innerHTML + "</li>"
+        }
+    }
+    str += "</ul>";
+    return str;
 }
