@@ -1,6 +1,7 @@
 var pater_nodes = document.getElementById("menu-all-nodes");
 var bg = chrome.extension.getBackgroundPage();
 var NodeDatas = bg.NodeDatas;
+$("#exampleInputAmount").focus();
 init_node_mune(NodeDatas);
 $.post(
     /*"http://yzt.casually.cc/menu-type.json",*/
@@ -144,14 +145,26 @@ function init_node_mune(nodes, pid, ele) {
                     "otag": "div",
                     "oclass": "menu-node menu_close",
                     "ohtml": "<span class='span-title'>" + nodes[i].name + "</span>",
-                    "oid": nodes[i].id
+                    "oid": nodes[i].id,
+                    "oattr":[
+                        {
+                            "name":"title",
+                            "type":nodes[i].name
+                        }
+                    ]
                 }
             } else {
                 c_obj = {
                     "otag": "div",
                     "oclass": "menu-url",
                     "ohtml": "<span data_url='" + nodes[i].url + "'>" + nodes[i].name + "</span>",
-                    "oid": nodes[i].id
+                    "oid": nodes[i].id,
+                    "oattr":[
+                        {
+                            "name":"title",
+                            "type":nodes[i].name
+                        }
+                    ]
                 }
             }
             var cele = createNode(c_obj)
