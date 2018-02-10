@@ -35,7 +35,7 @@ body{
 }
 
 #menu-all-nodes{
-    max-height: 400px;
+    height: 400px;
     overflow: auto;
 }
 
