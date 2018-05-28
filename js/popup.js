@@ -1,6 +1,43 @@
 var pater_nodes = document.getElementById("menu-all-nodes");
 var bg = chrome.extension.getBackgroundPage();
 var NodeDatas = bg.NodeDatas;
+
+var _login = localStorage.getItem("_login");
+if(_login){
+    bg._login = true;
+}
+/**
+ * 判断是否登录
+ */
+if(!bg._login){
+    $("#login-view").show();
+    $("#tags-view").hide();
+    $("#phone").focus();
+}else {
+    $("#exampleInputAmount").focus();
+    $("#login-view").hide();
+    $("#tags-view").show();
+}
+
+
+/**
+ * 登录
+ */
+$("#login").click(function (ev) {
+    $.post(
+        "http://www.casually.cc/casually/login.html",
+        {
+            "phone":$("#phone").val(),
+            "password":$("#passwd").val()
+        },
+        function (data) {
+            bg._login = true;
+            localStorage.setItem('_login', true)    ;
+        }
+    )
+    localStorage.setItem('_login', true);
+})
+
 $("#exampleInputAmount").focus();
 init_node_mune(NodeDatas);
 $.post(
@@ -20,6 +57,17 @@ $.post(
          //combinationMenu(d.menuType, d.menuUrl);
          console.table(bg.NodeDatas);
          init_node_mune(d);*/
+    }
+)
+
+/**
+ * 保存书签到网络
+ */
+$.post(
+    "http://www.casually.cc/casually/webtags.html",
+    {"NodeDatas":NodeDatas},
+    function (data) {
+        console.log("同步完成");
     }
 )
 

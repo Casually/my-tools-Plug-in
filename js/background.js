@@ -3,6 +3,7 @@ var tab_context = {
     title: ""
 };
 
+var _login = false;
 var menuType = new Array();
 var menuUrl = new Array();
 var menu_json = {
