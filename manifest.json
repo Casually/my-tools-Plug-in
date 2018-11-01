@@ -20,7 +20,7 @@
 	},
 	"content_scripts":[{
 		"matches":["http://*/*","https://*/*"],
-		"js":["js/jquery-3.0.0.js","js/bootstrap.js"],
+		"js":["js/jquery-3.0.0.js"],
 /*		"css":["css/bootstrap.css"],*/
 		"run_at":"document_end",
 		"all_frames":true

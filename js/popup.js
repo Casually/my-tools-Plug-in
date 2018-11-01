@@ -64,8 +64,12 @@ $.post(
  * 保存书签到网络
  */
 $.post(
-    "http://www.casually.cc/casually/webtags.html",
-    {"NodeDatas":NodeDatas},
+   // "http://www.casually.cc/casually/webtags.html",
+    "http://localhost/collection/synchro",
+    {
+        "NodeDatas":JSON.stringify(NodeDatas),
+        "phone":"13545675856"
+    },
     function (data) {
         console.log("同步完成");
     }
