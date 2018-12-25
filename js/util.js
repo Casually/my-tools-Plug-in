@@ -62,6 +62,17 @@ function hasClass(ele, cls) {
 /**
 * 创建节点
 * @param obj
+ *  {
+ *      otag: 标签类型
+ *      oclass: 标签class属性
+ *      oid: 标签ID属性
+ *      oname: 标签name属性
+ *      ohtml: 标签内容
+ *      oattr:{ 其他属性
+ *          name: 属性名称
+ *          type: 属性值
+ *      }
+ *  }
 * @returns {*}
 */
 function createNode(obj) {

@@ -3,17 +3,17 @@ var bg = chrome.extension.getBackgroundPage();
 var NodeDatas = bg.NodeDatas;
 
 var _login = localStorage.getItem("_login");
-if(_login){
+if (_login) {
     bg._login = true;
 }
 /**
  * 判断是否登录
  */
-if(!bg._login){
+if (!bg._login) {
     $("#login-view").show();
     $("#tags-view").hide();
     $("#phone").focus();
-}else {
+} else {
     $("#exampleInputAmount").focus();
     $("#login-view").hide();
     $("#tags-view").show();
@@ -27,12 +27,12 @@ $("#login").click(function (ev) {
     $.post(
         "http://www.casually.cc/casually/login.html",
         {
-            "phone":$("#phone").val(),
-            "password":$("#passwd").val()
+            "phone": $("#phone").val(),
+            "password": $("#passwd").val()
         },
         function (data) {
             bg._login = true;
-            localStorage.setItem('_login', true)    ;
+            localStorage.setItem('_login', true);
         }
     )
     localStorage.setItem('_login', true);
@@ -64,11 +64,11 @@ $.post(
  * 保存书签到网络
  */
 $.post(
-   // "http://www.casually.cc/casually/webtags.html",
+    // "http://www.casually.cc/casually/webtags.html",
     "http://localhost/collection/synchro",
     {
-        "NodeDatas":JSON.stringify(NodeDatas),
-        "phone":"13545675856"
+        "NodeDatas": JSON.stringify(NodeDatas),
+        "phone": "13545675856"
     },
     function (data) {
         console.log("同步完成");
@@ -198,10 +198,10 @@ function init_node_mune(nodes, pid, ele) {
                     "oclass": "menu-node menu_close",
                     "ohtml": "<span class='span-title'>" + nodes[i].name + "</span>",
                     "oid": nodes[i].id,
-                    "oattr":[
+                    "oattr": [
                         {
-                            "name":"title",
-                            "type":nodes[i].name
+                            "name": "title",
+                            "type": nodes[i].name
                         }
                     ]
                 }
@@ -211,10 +211,10 @@ function init_node_mune(nodes, pid, ele) {
                     "oclass": "menu-url",
                     "ohtml": "<span data_url='" + nodes[i].url + "'>" + nodes[i].name + "</span>",
                     "oid": nodes[i].id,
-                    "oattr":[
+                    "oattr": [
                         {
-                            "name":"title",
-                            "type":nodes[i].name
+                            "name": "title",
+                            "type": nodes[i].name
                         }
                     ]
                 }
@@ -226,6 +226,44 @@ function init_node_mune(nodes, pid, ele) {
     }
 }
 
+/**
+ * 生成常用快捷方式
+ */
+function shortcuKeys() {
+    $.post(
+        "../data/ShortcutKeys.json",
+        {},
+        function (datas) {
+            var data;
+            try {
+                data = JSON.parse(datas);
+            }catch (e) {
+                data = datas;
+            }
+            for (var i = 0; i < data.length; i++) {
+                getById("shortcutKeys").appendChild(
+                    createNode({
+                        "otag": "div",
+                        "oclass": "work_tools",
+                        "oattr": [
+                            {
+                                "name": "data_url",
+                                "type": data[i].url
+                            },
+                            {
+                                "name": "title",
+                                "type": data[i].name
+                            }
+                        ],
+                        "ohtml": "<img src=\"" + data[i].ico + "\">"
+                    })
+                )
+            }
+        }
+    )
+}
+
+shortcuKeys();
 /**
  * 点击监听，
  * 菜单的折叠。
@@ -242,6 +280,8 @@ document.addEventListener("click", function (ev) {
         open_url(manege_url(el.getAttribute("data_url")));
     } else if (el.tagName === "SPAN" && (el.parentNode.tagName === "LI")) {
         open_url(manege_url(el.getAttribute("data_url")));
+    } else if (el.parentNode.getAttribute("class") == "work_tools") {
+        open_url(manege_url(el.parentNode.getAttribute("data_url")));
     } else {
         return;
     }
